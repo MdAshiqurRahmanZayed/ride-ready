@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Car = ({ car }) => {
 
   return (
-    <div className="col-md-3 ">
+    <div className="col-md-3 my-2 ">
       <Link to={`/car/${car.id}`} className="text-decoration-none text-dark">
         <div className="card">
           <img src={car.image} className="card-img-top" alt={car.model} />
@@ -12,7 +12,11 @@ const Car = ({ car }) => {
             <h5 className="card-title">{car.model}</h5>
             <p className="card-text">Make: {car.make}</p>
             <p className="card-text">Year: {car.year}</p>
-            
+            <h6>Category:
+              <b>
+            {car.category.name}
+              </b>
+            </h6>
             {car.check_booked ? (
               <div className="text-warning">Already booked</div>
             ) : (

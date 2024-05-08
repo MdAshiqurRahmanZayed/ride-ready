@@ -5,6 +5,7 @@ import Loading from "../Loading/Loading";
 import Car from "../Store/Car";
 import AllCategory from "../Category/AllCategory";
 
+
 const mapStateToProps = (state) => ({
   token: state.token,
   user_type: state.user_type,
@@ -16,7 +17,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchAllVehicle: () => dispatch(fetchAllVehicle()),
 });
 
-const Home = ({ fetchAllVehicle, all_cars, isLoading }) => {
+const Home = ({ fetchAllVehicle, all_cars, isLoading ,notify }) => {
   const [filteredCars, setFilteredCars] = useState([]);
 
   useEffect(() => {
@@ -29,13 +30,15 @@ const Home = ({ fetchAllVehicle, all_cars, isLoading }) => {
   
   const handleCategorySelect = (id) => {
     let filtered = null
+    console.log(id);
+    console.log(all_cars);
 
 
     if (id===0) {
     filtered = all_cars  
     }
     else{
-    filtered = all_cars.filter((car) => car.category === id);
+    filtered = all_cars.filter((car) => car.category.id === id);
     }
     setFilteredCars(filtered);
   };
@@ -46,12 +49,13 @@ const Home = ({ fetchAllVehicle, all_cars, isLoading }) => {
   } else {
     all_car_show = filteredCars.map((item) => <Car key={item.id} car={item} />);
   }
-
+   
   return (
     <div className="container">
       <AllCategory onSelectCategory={handleCategorySelect} />
       <div className="row mb-3">
-      {all_car_show}
+        {all_car_show}
+       
       </div>
     </div>
   );

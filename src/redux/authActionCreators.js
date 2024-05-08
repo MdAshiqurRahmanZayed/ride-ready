@@ -138,6 +138,7 @@ export const logout = () => {
 
 
 export const authCheck = () => dispatch => {
+     
      const token = localStorage.getItem('token');
      if (!token) {
           // Logout

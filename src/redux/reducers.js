@@ -15,6 +15,8 @@ const initialState = {
      authFailedMsg: null,
      successMsg:null,
      errorMsg:null,
+     infoMsg:null,
+     warningMsg: null,
 
      token: null,
      // expirationTime:0,
@@ -22,6 +24,7 @@ const initialState = {
      userId: null,
      authLoading: false,
      error: null,
+     authCheckResponse:false,
      lengthRoom: 0,
      lengthRoomBooked: 0,
      lengthRoomLeft: 0,
@@ -34,7 +37,7 @@ const reducer = (state = initialState, action) => {
                return {
                     ...state,
                     isLoading: false,
-                    successMsg: "Successfully category created.",
+                    successMsg: `Successfully (${action.payload.categoryList.name}) created.`,
                     category: action.payload.categoryList,
                     errorMsg: null
                };
@@ -222,6 +225,7 @@ const reducer = (state = initialState, action) => {
                     userId: action.payload.userId,
                     user_type: action.payload.user_type,
                     successMsg: "Successfully Login",
+                    authCheckResponse: true,
                     // errorMsg: "There is no error",
                };
 
@@ -233,7 +237,8 @@ const reducer = (state = initialState, action) => {
                     token: null,
                     userId: null,
                     user_type:"",
-                    successMsg:"Successfully Logout"
+                    successMsg:"Successfully Logout",
+                    authCheckResponse:false,
                }
           case actionTypes.AUTH_LOADING:
                return {

@@ -12,9 +12,11 @@ const mapDispatchToProps = (dispatch) => ({
   deleteCategory: (token, id) => dispatch(deleteCategory(token, id)),
 });
 
-const DeleteCategory = ({ category, deleteCategory, toggle,token }) => {
+const DeleteCategory = ({ category, deleteCategory, toggle,token,notify }) => {
+  
   const handleDelete = () => {
     deleteCategory(token, category.id);
+    notify('Deleted Successfully','error')
     toggle(); 
   };
 

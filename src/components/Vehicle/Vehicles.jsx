@@ -22,9 +22,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchVehicle: (token) => dispatch(fetchVehicle(token)),
 });
 
-const Vehicles = ({ token, vehicles, fetchVehicle, isLoading }) => {
-
-
+const Vehicles = ({ token, vehicles, fetchVehicle, isLoading, notify }) => {
   const [modal, setModal] = useState(false);
   const [fetchedVehicles, setFetchedVehicles] = useState([]);
   // console.log(vehicles);
@@ -37,7 +35,6 @@ const Vehicles = ({ token, vehicles, fetchVehicle, isLoading }) => {
     setFetchedVehicles(vehicles);
   }, [vehicles]);
 
-
   const toggleModal = () => {
     setModal(!modal);
   };
@@ -48,7 +45,7 @@ const Vehicles = ({ token, vehicles, fetchVehicle, isLoading }) => {
   } else {
     vehicle_show = fetchedVehicles.map((vehicle) => (
       <div className="" key={vehicle.id}>
-        <Vehicle vehicle={vehicle} />
+        <Vehicle notify={notify} vehicle={vehicle} />
       </div>
     ));
   }
@@ -61,14 +58,11 @@ const Vehicles = ({ token, vehicles, fetchVehicle, isLoading }) => {
       <Modal isOpen={modal} toggle={toggleModal}>
         <ModalHeader toggle={toggleModal}>Add Vehicle</ModalHeader>
         <ModalBody>
-          <VehicleForm toggle={toggleModal} />
+          <VehicleForm notify={notify} toggle={toggleModal} />
         </ModalBody>
       </Modal>
 
-      <div className="mt-4">
-        {vehicle_show}
-  
-      </div>
+      <div className="mt-4">{vehicle_show}</div>
     </div>
   );
 };

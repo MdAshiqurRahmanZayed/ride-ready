@@ -21,6 +21,7 @@ const VehicleFormUpdate = ({
   updateVehicle,
   all_category,
   vehicle,
+  notify
 }) => {
   const [allCategoried, setAllCategoried] = useState([]);
   const [imageForm, setImageForm] = useState(null);
@@ -35,14 +36,11 @@ const VehicleFormUpdate = ({
     description: vehicle.description,
     category: vehicle.category,
   });
+
   useEffect(() => {
     setAllCategoried(all_category);
   }, [all_category]);
-  // console.log(all_category);
 
-  // console.log(vehicle);
-
-  // console.log(token);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,12 +49,6 @@ const VehicleFormUpdate = ({
     });
   };
 
-  // const handleFileChange = (e) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.files[0],
-  //   });
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +61,7 @@ const VehicleFormUpdate = ({
         price_per_day: formData.price_per_day,
         description: formData.description,
         owner: localStorage.getItem("userId"),
-        category: formData.category,
+        category: formData.category.id,
         // image: formData?.image,
       };
       if (imageForm!==null) {
@@ -83,6 +75,7 @@ const VehicleFormUpdate = ({
       // console.log(vehicleData);
 
       updateVehicle(vehicleData, token,vehicle.id);
+      notify("Vehicle updated successfully", "success");
       toggle();
 
 
@@ -96,6 +89,7 @@ const VehicleFormUpdate = ({
         category: "",
       });
     } catch (error) {
+      notify("Vehicle does not updted successfully", "error");
       console.error("Error creating vehicle:", error);
     }
   };
@@ -113,15 +107,13 @@ const VehicleFormUpdate = ({
             value={formData.category}
             onChange={handleChange}
           >
-            {/* Default option */}
             <option value="">Select a category</option>
 
-            {/* Mapping categories */}
             {allCategoried.map((category, index) => (
               <option
                 key={category.id}
                 value={category.id}
-                selected={index === 0} // Select first category by default
+                selected={index === 0} 
               >
                 {category.name}
               </option>

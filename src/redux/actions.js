@@ -110,7 +110,7 @@ export const createCategory = (categoryName, userId, token) => {
                dispatch(createCategorySuccess(response.data, fetchResponse.data));
           } catch (error) {
                // console.log(error.response.data.name[0]);
-               dispatch(createCategoryFailure(error.response.data.name[0]));
+               dispatch(createCategoryFailure(error.response.data));
           }
      };
 };
@@ -134,7 +134,7 @@ export const updateCategory = (categoryName, userId, token, id) => {
                dispatch(createCategorySuccess(response.data, fetchResponse.data));
           } catch (error) {
                // console.log(error.response.data.name[0]);
-               dispatch(createCategoryFailure(error.response.data.name[0]));
+               dispatch(createCategoryFailure(error.response.data));
           }
      };
 };
@@ -155,7 +155,7 @@ export const deleteCategory = (token, id) => {
                dispatch(createCategorySuccess(response.data, fetchResponse.data));
           } catch (error) {
                // console.log(error.response.data.name[0]);
-               dispatch(createCategoryFailure(error.response.data.name[0]));
+               dispatch(createCategoryFailure(error.response.data));
           }
      };
 };

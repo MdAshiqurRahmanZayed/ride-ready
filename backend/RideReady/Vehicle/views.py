@@ -42,7 +42,7 @@ class VehicleCategoryListAPIView(generics.ListAPIView):
     
 class VehicleListAPIView(generics.ListAPIView):
     queryset = Vehicle.objects.all()
-    serializer_class = VehicleSerializer
+    serializer_class = AllVehicleSerializer
     
 
 

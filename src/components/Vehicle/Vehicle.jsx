@@ -4,7 +4,9 @@ import { Card, CardBody, CardTitle, CardText } from "reactstrap";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import VehicleFormUpdate from "./VehicleFormUpdate";
 import DeleteVehicle from "./DeleteVehicle";
-const Vehicle = ({ vehicle }) => {
+
+
+const Vehicle = ({ vehicle, notify }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenUpdate, setisModalOpenUpdate] = useState(false);
 
@@ -43,30 +45,37 @@ const Vehicle = ({ vehicle }) => {
               </CardText>
             </div>
             <div className="col-md-4">
+              <Button color="primary me-2" onClick={openModalUpdate}>
+                Update Vehicle
+              </Button>
 
-          <Button color="primary me-2" onClick={openModalUpdate}>
-            Update Vehicle
-          </Button>
+              <Modal isOpen={isModalOpenUpdate} toggle={closeModalDelete}>
+                <ModalHeader toggle={closeModalDelete}>
+                  Update Vehicle
+                </ModalHeader>
+                <ModalBody>
+                  <VehicleFormUpdate
+                    notify={notify}
+                    toggle={closeModalDelete}
+                    vehicle={vehicle}
+                  />
+                </ModalBody>
+              </Modal>
 
-          <Modal isOpen={isModalOpenUpdate} toggle={closeModalDelete}>
-            <ModalHeader toggle={closeModalDelete}>Update Vehicle</ModalHeader>
-            <ModalBody>
-              <VehicleFormUpdate toggle={closeModalDelete} vehicle={vehicle} />
-            </ModalBody>
-          </Modal>
+              <Button color="danger my-2" onClick={openModal}>
+                Delete Vehicle
+              </Button>
 
-          <Button color="danger my-2" onClick={openModal}>
-            Delete Vehicle
-          </Button>
-
-          <Modal isOpen={isModalOpen} toggle={closeModal}>
-            <ModalHeader toggle={closeModal}>Delete Vehicle</ModalHeader>
-            <ModalBody>
-              <DeleteVehicle vehicle={vehicle} toggle={closeModal} />
-            </ModalBody>
-          </Modal>
-
-
+              <Modal isOpen={isModalOpen} toggle={closeModal}>
+                <ModalHeader toggle={closeModal}>Delete Vehicle</ModalHeader>
+                <ModalBody>
+                  <DeleteVehicle
+                    notify={notify}
+                    vehicle={vehicle}
+                    toggle={closeModal}
+                  />
+                </ModalBody>
+              </Modal>
             </div>
           </div>
         </CardBody>

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { createCategory, updateCategory } from "../../redux/actions";
-import ToastNotification from "../Notification/ToastNotification";
+
 
 const mapStateToProps = (state) => ({
   token: state.token,
   userId: state.userId,
+  successMsg: state.successMsg,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,9 +25,9 @@ const CategoryForm = ({
   closeModal,
   mode,
   category,
+  notify,
 }) => {
   const [categoryName, setCategoryName] = useState("");
-  const [showToast, setShowToast] = useState(false); 
 
   useEffect(() => {
     if (mode === "update") {
@@ -45,24 +46,27 @@ const CategoryForm = ({
       try {
         await updateCategory(categoryName, userId, token, category.id);
         setCategoryName("");
-        setShowToast(true); 
         closeModal();
+        notify("Category updated successfully", "success");
       } catch (error) {
+        closeModal();
+        notify("Category does not updated", "error");
         console.error("Error updating category:", error);
       }
     } else {
       try {
         await createCategory(categoryName, userId, token);
         setCategoryName("");
-        setShowToast(true); 
+        notify("Category created successfully", "success");
         closeModal();
       } catch (error) {
+        notify("Sorry there are error", "error");
+        closeModal();
         console.error("Error creating category:", error);
       }
     }
   };
 
-  // console.log(showToast);
 
   return (
     <div>
@@ -83,9 +87,7 @@ const CategoryForm = ({
           Submit
         </Button>
       </Form>
-      {showToast && (
-        <ToastNotification message="Operation successful" type="success" />
-      )}
+      
     </div>
   );
 };

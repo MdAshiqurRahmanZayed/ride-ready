@@ -4,10 +4,10 @@ import CategoryForm from "./CategoryForm";
 import DeleteCategory from "./DeleteCategory";
 
 
-const Category = ({ category }) => {
+const Category = ({ category, notify }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
-  
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -25,7 +25,7 @@ const Category = ({ category }) => {
   };
 
   return (
-    <div className="row">
+    <div className="row" key={category.id}>
       <div className="col-md-6" key={category.id}>
         {category.name}
       </div>
@@ -35,9 +35,13 @@ const Category = ({ category }) => {
         </Button>
 
         <Modal isOpen={isModalOpenDelete} toggle={closeModalDelete}>
-          <ModalHeader toggle={closeModalDelete} >Delete Category</ModalHeader>
+          <ModalHeader toggle={closeModalDelete}>Delete Category</ModalHeader>
           <ModalBody>
-            <DeleteCategory category={category} toggle={closeModalDelete} />
+            <DeleteCategory
+              category={category}
+              notify={notify}
+              toggle={closeModalDelete}
+            />
           </ModalBody>
         </Modal>
 
@@ -52,6 +56,7 @@ const Category = ({ category }) => {
               closeModal={closeModal}
               mode="update"
               category={category}
+              notify={notify}
             />
           </ModalBody>
         </Modal>

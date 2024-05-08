@@ -24,7 +24,8 @@ const VehicleForm = ({
   categories,
   fetchAllCategory,
   createVehicle,
-  mode
+  mode,
+  notify
 
 }) => {
   const [allCategoried, setAllCategoried] = useState([]);
@@ -46,11 +47,7 @@ const VehicleForm = ({
 useEffect(() => {
   setAllCategoried(categories);
 }, [categories]);
-// console.log(categories);
 
-// console.log(vehicle);
-
-  // console.log(token);
 
   const handleChange = (e) => {
     
@@ -83,32 +80,12 @@ useEffect(() => {
       image:formData.image
     };
 
-    // Check if category is not empty and include it in vehicleData
-    if (formData.category !== "") {
-      vehicleData.category = formData.category;
-    }
-    // console.log(vehicleData);
-
 
     
     createVehicle(vehicleData, token);
+    notify('Vehicle Created successfully','success')
     toggle();
     
-    //     const config = {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //       },
-    //     };
-    // axios
-    //   .post(baseUrl + "api/vehicle/", vehicleData, config)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //      toggle();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.message);
-    //   });
 
     setFormData({
       make: "",
@@ -120,7 +97,8 @@ useEffect(() => {
       category: "",
     });
   } catch (error) {
-    console.error("Error creating vehicle:", error);
+    notify("Vehicle does not create", "error");
+    // console.error("Error creating vehicle:", error);
   }
   };
 
@@ -147,7 +125,7 @@ useEffect(() => {
               <option
                 key={category.id}
                 value={category.id}
-                selected={index === 0} // Select first category by default
+                selected={index === 0}
               >
                 {category.name}
               </option>
@@ -213,6 +191,7 @@ useEffect(() => {
             type="textarea"
             name="description"
             id="description"
+            cols="50"
             value={formData.description}
             onChange={handleChange}
           />

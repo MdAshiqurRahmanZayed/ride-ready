@@ -1,10 +1,15 @@
 import React from "react";
 import { ToastContainer,toast } from "react-toastify";
+import { notificationTime } from "../../redux/baseUrls";
+
 
 const ToastNotification = ({ message, type }) => {
+  console.log('====================================');
+  console.log(message);
+  console.log('====================================');
   switch (type) {
     case 'success':
-      toast(message, 5000);
+      toast(message, notificationTime);
       break;
   
     default:
@@ -12,7 +17,7 @@ const ToastNotification = ({ message, type }) => {
   }
   
   // const toastClassName = `bg-${type}`;
-  console.log(message);
+
 
   return (
     <div className="p-3 my-2 rounded">

@@ -53,7 +53,7 @@ const CarDetail = ({ user_type }) => {
       ) : car ? (
         <div className="car-details">
           <div className="row">
-            <div className="col-md-10">
+            <div className="col-md-9">
               <h2>
                 Model: <b>{car.model}</b> <br />
                 By: <b> {car.make}</b>
@@ -62,14 +62,16 @@ const CarDetail = ({ user_type }) => {
                 <br />
               </h2>
             </div>
-            <div className="col-md-2">
+            <div className="col-md-3">
               
               {user_type === "client" && car.check_booked === false ? (
                 <Button color="primary my-2" onClick={openModal}>
                   Book car
                 </Button>
               ) : (
-                <div className=""></div>
+                <div className="">
+                  login as client for booking car
+                </div>
               )}
               <Modal isOpen={isModalOpen} toggle={closeModal}>
                 <ModalHeader toggle={closeModal}>Book car</ModalHeader>

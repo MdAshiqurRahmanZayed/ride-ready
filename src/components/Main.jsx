@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import { Route, Routes, Navigate } from "react-router-dom";
@@ -13,10 +13,13 @@ import Vehicles from "./Vehicle/Vehicles";
 import CarDetail from "./Store/CarDetail";
 import AllBooked from "./Book/AllBooked";
 import SeeBookedVehicle from "./Vehicle/SeeBookedVehicle";
+import toast, { Toaster } from "react-hot-toast";
+import { notificationTime } from "../redux/baseUrls";
 
 const mapStateToProps = (state) => ({
   token: state.token,
   successMsg: state.successMsg,
+  authCheckResponse: state.authCheckResponse,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -24,18 +27,44 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const Main = ({ token, authCheck, successMsg }) => {
+  useEffect(() => {
+    authCheck()
+  }, [authCheck]);
+
+
   let routes = null;
+  const notify = (message, type) => {
+    switch (type) {
+      case "success":
+        toast.success(message);
+        break;
+      case "warning":
+        toast.warning(message);
+        break;
+      case "error":
+        toast.error(message);
+        break;
+      case "info":
+        toast.info(message);
+        break;
+      default:
+        break;
+    }
+  };
   if (token) {
     // If token exists, user is authenticated
     routes = (
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/category" element={<Categories />} />
-        <Route path="/vehicle" element={<Vehicles />} />
+        <Route path="/" element={<Home notify={notify} />} />
+        <Route path="/category" element={<Categories notify={notify} />} />
+        <Route path="/vehicle" element={<Vehicles notify={notify} />} />
         <Route path="/car/:id" element={<CarDetail />} />
-        <Route path="/all-booked" element={<AllBooked />} />
-        <Route path="/see-all-booked" element={<SeeBookedVehicle/>} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/all-booked" element={<AllBooked notify={notify} />} />
+        <Route
+          path="/see-all-booked"
+          element={<SeeBookedVehicle notify={notify} />}
+        />
+        <Route path="/logout" element={<Logout notify={notify} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     );
@@ -43,9 +72,9 @@ const Main = ({ token, authCheck, successMsg }) => {
     // If token doesn't exist, user is not authenticated
     routes = (
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home notify={notify} />} />
         <Route path="/car/:id" element={<CarDetail />} />
-        <Route path="/signin" element={<Auth />} />
+        <Route path="/signin" element={<Auth notify={notify} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     );
@@ -53,8 +82,14 @@ const Main = ({ token, authCheck, successMsg }) => {
 
   return (
     <div>
-      <Header />
-      
+      <Header notify={notify} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          duration: notificationTime,
+        }}
+      />
       {routes}
       <Footer />
     </div>
