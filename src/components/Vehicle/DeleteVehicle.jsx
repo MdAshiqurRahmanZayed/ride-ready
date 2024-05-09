@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch) => ({
 const DeleteVehicle = ({ vehicle, toggle, token, deleteVehicle, notify }) => {
   const handleDelete = () => {
     deleteVehicle(vehicle.id, token);
-    notify("Vehicle deleted successfully", "error");
+    notify("Vehicle deleted successfully", "warning");
     toggle();
   };
 

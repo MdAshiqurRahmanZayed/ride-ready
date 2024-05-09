@@ -82,7 +82,7 @@ class Auth extends Component {
                   values.user_type,
                   mode
                 );
-                this.props.notify("Authentication successful",'success');
+                this.props.notify("Authentication successful",'info');
               }}
               validate={(values) => {
                 const errors = {};

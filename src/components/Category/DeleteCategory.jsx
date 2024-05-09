@@ -16,7 +16,7 @@ const DeleteCategory = ({ category, deleteCategory, toggle,token,notify }) => {
   
   const handleDelete = () => {
     deleteCategory(token, category.id);
-    notify('Deleted Successfully','error')
+    notify('Deleted Successfully','warning')
     toggle(); 
   };
 

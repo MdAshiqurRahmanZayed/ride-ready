@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch) => {
 class Logout extends Component {
   componentDidMount() {
     this.props.logout();
-    this.props.notify("Logout Successfully",'success');
+    this.props.notify("Logout Successfully",'info');
     // console.log(this.props.notify);
   }
   

@@ -13,9 +13,11 @@ import Vehicles from "./Vehicle/Vehicles";
 import CarDetail from "./Store/CarDetail";
 import AllBooked from "./Book/AllBooked";
 import SeeBookedVehicle from "./Vehicle/SeeBookedVehicle";
-import toast, { Toaster } from "react-hot-toast";
-import { notificationTime } from "../redux/baseUrls";
-
+// import toast, { Toaster } from "react-hot-toast";
+// import { notificationTime } from "../redux/baseUrls";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+  
 const mapStateToProps = (state) => ({
   token: state.token,
   successMsg: state.successMsg,
@@ -83,13 +85,8 @@ const Main = ({ token, authCheck, successMsg }) => {
   return (
     <div>
       <Header notify={notify} />
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          duration: notificationTime,
-        }}
-      />
+              <ToastContainer />
+      
       {routes}
       <Footer />
     </div>
