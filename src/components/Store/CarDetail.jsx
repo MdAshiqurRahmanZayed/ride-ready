@@ -5,7 +5,7 @@ import { baseUrl } from "../../redux/baseUrls";
 import Loading from "../Loading/Loading";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import BookingForm from "../Book/BookingForm";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 
 const mapStateToProps = (state) => ({
   user_type: state.user_type,
@@ -14,13 +14,15 @@ const mapStateToProps = (state) => ({
 });
 
 
-const CarDetail = ({ user_type }) => {
+const CarDetail = ({ user_type, token }) => {
   const { id } = useParams();
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const url = baseUrl + "api/car/" + id;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userId = useSelector((state) => state.userId);
 
+  // console.log(userId);
   useEffect(() => {
     const fetchCar = async () => {
       try {
@@ -30,7 +32,7 @@ const CarDetail = ({ user_type }) => {
         setLoading(false);
         //    console.log(response.data);
       } catch (error) {
-           console.log(error);
+        console.log(error);
         setLoading(false);
       }
     };
@@ -45,6 +47,27 @@ const CarDetail = ({ user_type }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  let context = null;
+  if (token ) {
+    if (car) {
+      if (user_type === "car_owner") {
+        context = <p>Please log in as client for booking a car.</p>;
+      } else if (car.check_booked === false) {
+        context = (
+          <Button color="primary my-2" onClick={openModal}>
+            Book car
+          </Button>
+        );
+      } else if (car.check_booked === true) {
+        context = <div className="text-info">Already Booked</div>;
+      } else {
+        context = <div className="text-success">You can book</div>;
+      }
+    }
+  } else {
+    context = <div>Please log in as client.</div>;
+  }
 
   return (
     <div className="container">
@@ -63,16 +86,7 @@ const CarDetail = ({ user_type }) => {
               </h2>
             </div>
             <div className="col-md-3">
-              
-              {user_type === "client" && car.check_booked === false ? (
-                <Button color="primary my-2" onClick={openModal}>
-                  Book car
-                </Button>
-              ) : (
-                <div className="">
-                  login as client for booking car
-                </div>
-              )}
+              {context}
               <Modal isOpen={isModalOpen} toggle={closeModal}>
                 <ModalHeader toggle={closeModal}>Book car</ModalHeader>
                 <ModalBody>

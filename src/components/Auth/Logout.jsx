@@ -1,32 +1,23 @@
-import React, { Component } from "react";
-import { Navigate } from "react-router-dom";
-import { connect } from "react-redux";
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { logout } from "../../redux/authActionCreators";
-// import toast, { Toaster } from "react-hot-toast";
-// import { notificationTime } from "../../redux/baseUrls";
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logout: () => dispatch(logout()),
-    
-  };
+const Logout = ({ notify }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [notified, setNotified] = useState(false);
+
+  useEffect(() => {
+    if (!notified) {
+      dispatch(logout());
+      notify("Logout Successfully", "info");
+      setNotified(true);
+      navigate("/");
+    }
+  }, [dispatch, navigate, notify, notified]);
+
+  return <div></div>;
 };
 
-class Logout extends Component {
-  componentDidMount() {
-    this.props.logout();
-    this.props.notify("Logout Successfully",'info');
-    // console.log(this.props.notify);
-  }
-  
-  render() {
-    return (
-      <div className="">
-        <Navigate to="/" />
-      </div>
-    );
-  }
-}
-
-export default connect(null, mapDispatchToProps)(Logout);
+export default Logout;

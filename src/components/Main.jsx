@@ -85,7 +85,7 @@ const Main = ({ token, authCheck, successMsg }) => {
   return (
     <div>
       <Header notify={notify} />
-              <ToastContainer />
+      <ToastContainer />
       
       {routes}
       <Footer />

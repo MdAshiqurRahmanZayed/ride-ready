@@ -60,7 +60,7 @@ export const auth = (email, password, passwordConfirm, user_type, mode) => dispa
      let authUrl = null;
      if (mode === "Sign Up") {
           authUrl = baseUrl + "api/register/";
-          console.log(authData);
+          // console.log(authData);
           axios.post(authUrl , authData)
                
                .then(response => {
@@ -141,7 +141,6 @@ export const authCheck = () => dispatch => {
      
      const token = localStorage.getItem('token');
      if (!token) {
-          // Logout
           dispatch(logout());
      } else {
           const expirationTime = new Date(localStorage.getItem('expirationTime'));

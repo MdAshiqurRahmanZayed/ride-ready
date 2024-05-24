@@ -32,4 +32,12 @@ urlpatterns = [
     path('see-all-booked/',SeeBookingListAPIView.as_view(),name='SeeBookingListAPIView'),
     
     
+    #Payment
+    path('booking/<int:vehicle_id>/payment/', BookingPaymentView.as_view(), name='booking_payment'),
+    path('purchase/<payment_data>/<data>/', purchase, name="purchase"),
+    
+    path('status/', complete, name="complete"),
+    
+    
+    
 ]+router.urls

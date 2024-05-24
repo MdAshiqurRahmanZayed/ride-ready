@@ -20,8 +20,8 @@ class BookingModelSerializer(serializers.ModelSerializer):
 
 
      def get_total_cost(self, obj):
-        start_date = obj.start_date
-        end_date = obj.end_date
+        start_date = str(obj.start_date)
+        end_date = str(obj.end_date)
         date1 = datetime.strptime(start_date, '%Y-%m-%d')
         date2 = datetime.strptime(end_date, '%Y-%m-%d')
         total_days = date2-date1
@@ -44,3 +44,8 @@ class SeeBookingModelSerializer(serializers.ModelSerializer):
           model = Booking
           fields = '__all__'
 
+class BookingSerializerPayment(serializers.ModelSerializer):
+     
+     class Meta:
+          model = Booking
+          fields = '__all__'

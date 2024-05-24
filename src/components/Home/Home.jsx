@@ -30,8 +30,8 @@ const Home = ({ fetchAllVehicle, all_cars, isLoading ,notify }) => {
   
   const handleCategorySelect = (id) => {
     let filtered = null
-    console.log(id);
-    console.log(all_cars);
+    // console.log(id);
+    // console.log(all_cars);
 
 
     if (id===0) {

@@ -14,8 +14,8 @@ import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {
   return {
-    token: state.token,
-    user_type: state.user_type,
+    token: localStorage.getItem("token"),
+    user_type: localStorage.getItem("user_type"),
     // lengthRoomBooked: state.lengthRoomBooked,
     // userId: state.userId,
     // bookedRooms: state.bookedRooms,

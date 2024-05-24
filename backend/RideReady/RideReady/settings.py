@@ -193,3 +193,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
 ]
+
+FRONTEND_URL = "http://localhost:3000/"
+
+#sslcomers
+
+SSL_STORE_ID = 'md64076ccf6a3aa'
+SSL_API_KEY = 'md64076ccf6a3aa@ssl'

@@ -1,7 +1,20 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom"; 
+import { Button } from "reactstrap";
 
 const Car = ({ car }) => {
+  const userId = useSelector((state) => state.userId);
+  const user_type = useSelector((state) => state.user_type);
+
+  let context = null;
+  if (car) {
+    if (car.check_booked === false) {
+      context = <div className="text-success">You can book</div>;
+    }  else {
+      context = <div className="text-info">Already Booked</div>;
+    }
+  }
 
   return (
     <div className="col-md-3 my-2 ">
@@ -17,11 +30,7 @@ const Car = ({ car }) => {
             {car.category.name}
               </b>
             </h6>
-            {car.check_booked ? (
-              <div className="text-warning">Already booked</div>
-            ) : (
-              <div className="text-success">You can book</div>
-            )}
+            {context}
           </div>
         </div>
       </Link>
