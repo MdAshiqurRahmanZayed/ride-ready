@@ -158,13 +158,15 @@ def complete(request):
             context ={
                 "message":"Your Payment Failed! Please Try Again!"
             }
-            return Response(context, status=400)
+            return redirect(settings.FRONTEND_URL)
+
             
         else:
             context = {
                 "message":"Your Payment Canceled! Please Try Again!",
             }
-            return Response(context, status=400)
+            return redirect(settings.FRONTEND_URL)
+
 
 # @login_required
 def purchase(request, payment_data,data):

@@ -4,9 +4,9 @@ import Footer from "./Footer/Footer";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Auth from "./Auth/Auth";
 import Logout from "./Auth/Logout";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import Home from "./Home/Home";
-import { authCheck } from "../redux/authActionCreators";
+import { authCheck, remove_auth_message } from "../redux/authActionCreators";
 import "react-toastify/dist/ReactToastify.css";
 import Categories from "./Category/Categories";
 import Vehicles from "./Vehicle/Vehicles";
@@ -29,6 +29,10 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const Main = ({ token, authCheck, successMsg }) => {
+    const authFailedMsg = useSelector((state) => state.authFailedMsg);
+    const authSuccessMsg = useSelector((state) => state.authSuccessMsg);
+    const dispatch = useDispatch();
+
   useEffect(() => {
     authCheck()
   }, [authCheck]);
@@ -53,6 +57,16 @@ const Main = ({ token, authCheck, successMsg }) => {
         break;
     }
   };
+  useEffect(() => {
+    if (authSuccessMsg) {
+      notify(authSuccessMsg, "info");
+      dispatch(remove_auth_message());
+    }
+    if (authFailedMsg) {
+      notify(authFailedMsg, "error");
+      dispatch(remove_auth_message());
+    }
+  }, [authSuccessMsg, authFailedMsg, dispatch]);
   if (token) {
     // If token exists, user is authenticated
     routes = (

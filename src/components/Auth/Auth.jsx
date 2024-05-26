@@ -1,215 +1,169 @@
-import React, { Component } from "react";
-import { Formik } from "formik";
-import { connect } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../../redux/authActionCreators";
 import Spinner from "../Loading/Loading";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-import toast, { Toaster } from "react-hot-toast";
-import { notificationTime } from "../../redux/baseUrls";
 
-const mapStateToProps = (state) => ({
-  authLoading: state.authLoading,
-  authFailedMsg: state.authFailedMsg,
-  successMsg: state.successMsg,
-});
+const Auth = ({ notify }) => {
+  const [mode, setMode] = useState("Login");
+  const [showPassword, setShowPassword] = useState(true);
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    user_type: "client",
+  });
+  const [errors, setErrors] = useState({});
 
-const mapDispatchToProps = (dispatch) => ({
-  auth: (email, password, passwordConfirm, user_type, mode) =>
-    dispatch(auth(email, password, passwordConfirm, user_type, mode)),
-});
+  const dispatch = useDispatch();
+  const authLoading = useSelector((state) => state.authLoading);
 
-class Auth extends Component {
-  state = {
-    mode: "Login",
-    showPassword: true,
+  const switchModeHandler = () => {
+    setMode((prevMode) => (prevMode === "Sign Up" ? "Login" : "Sign Up"));
   };
 
-  switchModeHandler = () => {
-    this.setState({
-      mode: this.state.mode === "Sign Up" ? "Login" : "Sign Up",
+  const handleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
     });
   };
 
-  handleShowPassword = () => {
-    this.setState({
-      showPassword: !this.state.showPassword,
-    });
-  };
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.successMsg !== prevProps.successMsg &&
-      this.props.successMsg
+  const validate = () => {
+    const errors = {};
+    if (!formValues.email) {
+      errors.email = "Required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formValues.email)
     ) {
-      toast.success(this.props.successMsg, { autoClose: 5000 });
+      errors.email = "Invalid email address";
+    }
+    if (!formValues.password) {
+      errors.password = "Required";
+    } else if (formValues.password.length < 4) {
+      errors.password = "Must be at least 4 characters!";
+    }
+    if (mode === "Sign Up") {
+      if (!formValues.passwordConfirm) {
+        errors.passwordConfirm = "Required";
+      } else if (formValues.password !== formValues.passwordConfirm) {
+        errors.passwordConfirm = "Password field does not match!";
+      }
     }
 
-    if (this.props.authFailedMsg !== prevProps.authFailedMsg) {
-      toast.error(this.props.authFailedMsg, { autoClose: 5000 });
+    return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+       dispatch(
+         auth(
+          formValues.email,
+          formValues.password,
+          formValues.passwordConfirm,
+          formValues.user_type,
+          mode
+        )
+      );
     }
-  }
+  };
 
-  render() {
-    const { authLoading } = this.props;
-    const { mode } = this.state;
-
-    return (
-      <div className="container my-5 px-5">
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            duration: notificationTime,
-          }}
-        />
-        {authLoading ? (
-          <Spinner />
-        ) : (
-          <div className="">
-            <Formik
-              initialValues={{
-                email: "",
-                password: "",
-                passwordConfirm: "",
-                user_type: "client",
+  return (
+    <div className="container my-5 px-5">
+      {authLoading ? (
+        <Spinner />
+      ) : (
+        <div className="">
+          <div
+            style={{
+              border: "1px grey solid",
+              padding: "15px",
+              borderRadius: "7px",
+            }}
+          >
+            <button
+              style={{
+                width: "100%",
+                backgroundColor: "#537188",
+                color: "white",
               }}
-              onSubmit={(values) => {
-                this.props.auth(
-                  values.email,
-                  values.password,
-                  values.passwordConfirm,
-                  values.user_type,
-                  mode
-                );
-                this.props.notify("Authentication successful",'info');
-              }}
-              validate={(values) => {
-                const errors = {};
-
-                if (!values.email) {
-                  errors.email = "Required";
-                } else if (
-                  !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                ) {
-                  errors.email = "Invalid email address";
-                }
-
-                if (!values.password) {
-                  errors.password = "Required";
-                } else if (values.password.length < 4) {
-                  errors.password = "Must be at least 4 characters!";
-                }
-
-                if (mode === "Sign Up") {
-                  if (!values.passwordConfirm) {
-                    errors.passwordConfirm = "Required";
-                  } else if (values.password !== values.passwordConfirm) {
-                    errors.passwordConfirm = "Password field does not match!";
-                  }
-                }
-
-                return errors;
-              }}
+              className="btn btn-lg"
+              onClick={switchModeHandler}
             >
-              {({ values, handleChange, handleSubmit, errors }) => (
-                <div
-                  style={{
-                    border: "1px grey solid",
-                    padding: "15px",
-                    borderRadius: "7px",
-                  }}
-                >
-                  <button
-                    style={{
-                      width: "100%",
-                      backgroundColor: "#537188",
-                      color: "white",
-                    }}
-                    className="btn btn-lg"
-                    onClick={this.switchModeHandler}
+              Switch to {mode === "Sign Up" ? "Login" : "Sign Up"}
+            </button>
+            <br />
+            <br />
+            <form onSubmit={handleSubmit}>
+              <input
+                name="email"
+                placeholder="Enter Your Email"
+                className="form-control"
+                value={formValues.email}
+                onChange={handleChange}
+              />
+              <span style={{ color: "red" }}>{errors.email}</span>
+              <br />
+              <input
+                name="password"
+                placeholder="Password"
+                className="form-control"
+                type={showPassword ? "password" : "text"}
+                value={formValues.password}
+                onChange={handleChange}
+              />
+              <span style={{ color: "red" }}>{errors.password}</span>
+              <br />
+              {mode === "Sign Up" && (
+                <div>
+                  <input
+                    name="passwordConfirm"
+                    placeholder="Confirm Password"
+                    className="form-control"
+                    type={showPassword ? "password" : "text"}
+                    value={formValues.passwordConfirm}
+                    onChange={handleChange}
+                  />
+                  <span style={{ color: "red" }}>{errors.passwordConfirm}</span>
+                  <br />
+                  <select
+                    name="user_type"
+                    className="form-select"
+                    value={formValues.user_type}
+                    onChange={handleChange}
                   >
-                    Switch to {mode === "Sign Up" ? "Login" : "Sign Up"}
-                  </button>
+                    <option value="client">Client</option>
+                    <option value="car_owner">Car owner</option>
+                  </select>
                   <br />
-                  <br />
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      name="email"
-                      placeholder="Enter Your Email"
-                      className="form-control"
-                      value={values.email}
-                      onChange={handleChange}
-                    />
-                    <span style={{ color: "red" }}>{errors.email}</span>
-                    <br />
-                    <input
-                      name="password"
-                      placeholder="Password"
-                      className="form-control"
-                      value={values.password}
-                      type={this.state.showPassword ? "password" : "text"}
-                      onChange={handleChange}
-                    />
-                    <span style={{ color: "red" }}>{errors.password}</span>
-                    <br />
-
-                    {mode === "Sign Up" && (
-                      <div>
-                        <input
-                          name="passwordConfirm"
-                          placeholder="Confirm Password"
-                          className="form-control"
-                          type={this.state.showPassword ? "password" : "text"}
-                          value={values.passwordConfirm}
-                          onChange={handleChange}
-                        />
-                        <span style={{ color: "red" }}>
-                          {errors.passwordConfirm}
-                        </span>
-                        <br />
-                        <select
-                          name="user_type"
-                          className="form-select"
-                          value={values.user_type}
-                          onChange={handleChange}
-                        >
-                          <option value="client">Client</option>
-                          <option value="car_owner">Car owner</option>
-                        </select>
-                        <br />
-                      </div>
-                    )}
-                    <div className="m-1">
-                      <input
-                        type="checkbox"
-                        name=""
-                        className="form-check-input"
-                        id=""
-                        onClick={() => this.handleShowPassword()}
-                        value={this.state.showPassword}
-                      />{" "}
-                      Show password
-                    </div>
-                    <button type="submit" className="btn btn-success">
-                      {mode === "Sign Up" ? "Sign Up" : "Login"}
-                    </button>
-                  </form>
                 </div>
               )}
-            </Formik>
-            <Toaster
-              position="top-right"
-              reverseOrder={false}
-              toastOptions={{
-                duration: notificationTime,
-              }}
-            />
+              <div className="m-1">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  onClick={handleShowPassword}
+                  checked={!showPassword}
+                />
+                Show password
+              </div>
+              <button type="submit" className="btn btn-success">
+                {mode === "Sign Up" ? "Sign Up" : "Login"}
+              </button>
+            </form>
           </div>
-        )}
-      </div>
-    );
-  }
-}
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

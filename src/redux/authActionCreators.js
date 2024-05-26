@@ -68,7 +68,7 @@ export const auth = (email, password, passwordConfirm, user_type, mode) => dispa
                     if (mode === "Sign Up") {
                          // console.log('login',response.data);
                          
-                         console.log(response.data);
+                         // console.log(response.data);
                          const data = {
                               email:authData.email,
                               password:authData.password
@@ -116,7 +116,7 @@ export const auth = (email, password, passwordConfirm, user_type, mode) => dispa
      
                })
                .catch(error => {
-     
+                    console.log(error.response.data.detail);
                     dispatch(authLoading(false));
                     dispatch(authFailedMsg(error.response.data.detail));
                }
@@ -132,6 +132,12 @@ export const logout = () => {
      localStorage.removeItem('user_type');
      return {
           type: actionTypes.AUTH_LOGOUT,
+     }
+}
+
+export const remove_auth_message = () => { 
+     return {
+          type: actionTypes.REMOVE_AUTH_MESSAGE,
      }
 }
 

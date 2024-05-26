@@ -13,6 +13,7 @@ const initialState = {
 
 
      authFailedMsg: null,
+     authSuccessMsg: null,
      successMsg:null,
      errorMsg:null,
      infoMsg:null,
@@ -224,7 +225,7 @@ const reducer = (state = initialState, action) => {
                     token: action.payload.token,
                     userId: action.payload.userId,
                     user_type: action.payload.user_type,
-                    successMsg: "Successfully Login",
+                    authSuccessMsg: "Successfully Login",
                     authCheckResponse: true,
                     // errorMsg: "There is no error",
                };
@@ -233,11 +234,10 @@ const reducer = (state = initialState, action) => {
           case actionTypes.AUTH_LOGOUT:
                return {
                     ...state,
-                    authFailedMsg: null,
                     token: null,
                     userId: null,
                     user_type:"",
-                    successMsg:"Successfully Logout",
+                    authSuccessMsg:"Successfully Logout",
                     authCheckResponse:false,
                }
           case actionTypes.AUTH_LOADING:
@@ -249,6 +249,12 @@ const reducer = (state = initialState, action) => {
                return {
                     ...state,
                     authFailedMsg: action.payload,
+               }
+          case actionTypes.REMOVE_AUTH_MESSAGE:
+               return {
+                    ...state,
+                    authFailedMsg:null,
+                    authSuccessMsg: null,
                }
 
           default:
