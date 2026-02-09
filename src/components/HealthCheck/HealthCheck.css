@@ -1,0 +1,146 @@
+.health-check-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.health-check-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.health-check-card h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.health-info {
+    margin: 20px 0;
+}
+
+.health-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.health-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.health-item .label {
+    font-weight: 600;
+    color: #555;
+    font-size: 16px;
+}
+
+.health-item .value {
+    font-weight: 500;
+    color: #333;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 30px;
+    font-size: 18px;
+    color: #667eea;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.error-message {
+    background: #fee;
+    border: 1px solid #fcc;
+    border-radius: 8px;
+    padding: 20px;
+    color: #c33;
+    text-align: center;
+}
+
+.status-error {
+    color: red;
+    font-size: 24px;
+}
+
+.refresh-btn {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.refresh-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .health-check-card {
+        padding: 25px;
+    }
+
+    .health-check-card h2 {
+        font-size: 24px;
+    }
+
+    .health-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

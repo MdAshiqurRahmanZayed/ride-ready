@@ -13,6 +13,7 @@ import Vehicles from "./Vehicle/Vehicles";
 import CarDetail from "./Store/CarDetail";
 import AllBooked from "./Book/AllBooked";
 import SeeBookedVehicle from "./Vehicle/SeeBookedVehicle";
+import HealthCheck from "./HealthCheck/HealthCheck";
 // import toast, { Toaster } from "react-hot-toast";
 // import { notificationTime } from "../redux/baseUrls";
 import { ToastContainer, toast } from "react-toastify";
@@ -80,6 +81,7 @@ const Main = ({ token, authCheck, successMsg }) => {
           path="/see-all-booked"
           element={<SeeBookedVehicle notify={notify} />}
         />
+        <Route path="/health-check" element={<HealthCheck />} />
         <Route path="/logout" element={<Logout notify={notify} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
@@ -90,6 +92,7 @@ const Main = ({ token, authCheck, successMsg }) => {
       <Routes>
         <Route path="/" element={<Home notify={notify} />} />
         <Route path="/car/:id" element={<CarDetail />} />
+        <Route path="/health-check" element={<HealthCheck />} />
         <Route path="/signin" element={<Auth notify={notify} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
