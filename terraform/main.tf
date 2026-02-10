@@ -264,13 +264,33 @@ resource "aws_s3_bucket_policy" "media_bucket_policy" {
         Sid       = "PublicReadGetObject"
         Effect    = "Allow"
         Principal = "*"
-        Action    = "s3:GetObject"
+        Action    = ["s3:GetObject", "s3:GetObjectVersion"]
         Resource  = "${aws_s3_bucket.media_bucket.arn}/*"
+      },
+      {
+        Sid       = "AllowListBucket"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:ListBucket"
+        Resource  = aws_s3_bucket.media_bucket.arn
       }
     ]
   })
 
   depends_on = [aws_s3_bucket_public_access_block.media_public_access]
+}
+
+# S3 Bucket CORS Configuration
+resource "aws_s3_bucket_cors_configuration" "media_bucket_cors" {
+  bucket = aws_s3_bucket.media_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "HEAD"]
+    allowed_origins = ["*"]
+    expose_headers  = ["ETag"]
+    max_age_seconds = 3000
+  }
 }
 
 # Generate .env file for frontend with backend URL
