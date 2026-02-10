@@ -1,0 +1,45 @@
+# AWS Configuration
+aws_region  = "us-east-1"
+aws_profile = "your-aws-profile-name"
+
+# Project Configuration
+project_name = "ride-ready"
+environment  = "dev"
+
+# Existing VPC and Subnets
+vpc_id               = "vpc-xxxxxxxxx"
+public_subnet_id     = "subnet-xxxxxxxxx"
+private_subnet_id    = "subnet-xxxxxxxxx"
+private_subnet_id_2  = ""  # Optional - leave empty to auto-find second subnet in different AZ
+nat_gateway_id       = "nat-xxxxxxxxx"
+private_route_table_id = "rtb-xxxxxxxxx"
+
+# EC2 Configuration
+instance_type      = "t3.small"     # Backend server
+db_instance_type   = "t3.micro"     # pgAdmin/DB management server
+key_name           = "your-key-pair-name"
+
+# Database Configuration
+db_name           = "rideready"
+db_username       = "admin"
+db_password       = "YourStrongPassword123!"
+db_instance_class = "db.t3.micro"
+
+# Frontend Configuration (optional)
+# Leave empty to auto-use backend Elastic IP
+# Or set custom domain/URL: backend_url = "https://api.yourdomain.com"
+backend_url = ""
+
+# Django Backend Configuration
+django_secret_key      = "your-super-secret-key-here-change-this"
+django_debug           = "False"
+django_allowed_hosts   = "*"  # Will auto-include backend IP
+use_sqlite             = false  # Set to true to use SQLite instead of PostgreSQL
+cors_allowed_origins   = ""  # Will auto-use frontend URL
+ssl_store_id           = "id"
+ssl_api_key            = "key@ssl"
+
+# AWS S3 Configuration
+use_s3                = true  # Use S3 for static/media files
+aws_access_key_id     = ""    # Leave empty - EC2 uses IAM role
+aws_secret_access_key = ""    # Leave empty - EC2 uses IAM role
