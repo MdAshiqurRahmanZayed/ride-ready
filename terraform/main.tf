@@ -162,48 +162,6 @@ resource "aws_eip" "backend_eip" {
   }
 }
 
-# Private EC2 Instance for pgAdmin
-resource "aws_instance" "pgadmin" {
-  ami                    = data.aws_ami.ubuntu.id
-  instance_type          = var.db_instance_type
-  key_name              = var.key_name
-  subnet_id             = var.private_subnet_id
-  vpc_security_group_ids = [aws_security_group.pgadmin_sg.id]
-
-  root_block_device {
-    volume_size = 10
-    volume_type = "gp3"
-  }
-
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update
-              apt-get install -y curl ca-certificates gnupg postgresql postgresql-contrib
-              
-              # Install pgAdmin
-              curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
-              echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list
-              apt-get update
-              apt-get install -y pgadmin4-web
-              
-              # Configure pgAdmin
-              /usr/pgadmin4/bin/setup-web.sh --yes
-              
-              # Configure PostgreSQL to listen on all interfaces
-              echo "listen_addresses = '*'" >> /etc/postgresql/*/main/postgresql.conf
-              echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/*/main/pg_hba.conf
-              
-              # Restart PostgreSQL
-              systemctl restart postgresql
-              EOF
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-db-server"
-    Environment = var.environment
-    Project     = var.project_name
-  }
-}
-
 # Data source for Ubuntu AMI
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -335,7 +293,7 @@ resource "local_file" "backend_env" {
     db_name               = var.db_name
     db_user               = var.db_username
     db_password           = var.db_password
-    db_host               = aws_instance.pgadmin.private_ip
+    db_host               = "db"
     use_s3                = var.use_s3 ? "True" : "False"
     aws_access_key_id     = var.aws_access_key_id
     aws_secret_access_key = var.aws_secret_access_key
@@ -348,5 +306,5 @@ resource "local_file" "backend_env" {
   })
   filename = "${path.module}/../backend/RideReady/.env"
 
-  depends_on = [aws_eip.backend_eip, aws_instance.pgadmin]
+  depends_on = [aws_eip.backend_eip]
 }

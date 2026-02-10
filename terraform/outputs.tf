@@ -9,13 +9,13 @@ output "backend_instance_id" {
 }
 
 output "db_endpoint" {
-  description = "Database server private IP"
-  value       = aws_instance.pgadmin.private_ip
+  description = "Database runs in Docker container"
+  value       = "db (Docker service)"
 }
 
 output "db_address" {
-  description = "Database server private IP"
-  value       = aws_instance.pgadmin.private_ip
+  description = "Database runs in Docker container"
+  value       = "db (Docker service)"
 }
 
 output "db_port" {
@@ -53,14 +53,9 @@ output "ssh_command" {
   value       = "ssh -i ~/.ssh/${var.key_name}.pem ubuntu@${aws_eip.backend_eip.public_ip}"
 }
 
-output "pgadmin_private_ip" {
-  description = "Private IP of pgAdmin EC2 instance"
-  value       = aws_instance.pgadmin.private_ip
-}
-
-output "pgadmin_connection_guide" {
-  description = "How to access pgAdmin"
-  value       = "SSH tunnel: ssh -i ~/.ssh/${var.key_name}.pem -L 8080:${aws_instance.pgadmin.private_ip}:80 ubuntu@${aws_eip.backend_eip.public_ip}, then browse to http://localhost:8080"
+output "database_info" {
+  description = "Database information"
+  value       = "PostgreSQL runs in Docker container on backend server. Connect via docker compose exec db psql -U rideready -d rideready_db"
 }
 
 output "frontend_env_file" {
