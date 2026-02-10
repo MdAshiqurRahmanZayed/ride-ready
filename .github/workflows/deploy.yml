@@ -1,8 +1,11 @@
-name: Deploy to EC2
+name: Deploy Backend to EC2
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'backend/**'
+      - 'terraform/**'
   workflow_dispatch:
 
 jobs:
