@@ -89,6 +89,15 @@ resource "aws_security_group" "pgadmin_sg" {
     description     = "PostgreSQL from backend"
   }
 
+  # ICMP (ping) from backend server
+  ingress {
+    from_port       = -1
+    to_port         = -1
+    protocol        = "icmp"
+    security_groups = [aws_security_group.backend_sg.id]
+    description     = "ICMP ping from backend"
+  }
+
   # Outbound
   egress {
     from_port   = 0
