@@ -181,6 +181,7 @@ data "aws_ami" "ubuntu" {
 # S3 Bucket for Frontend
 resource "aws_s3_bucket" "frontend_bucket" {
   bucket = "${var.project_name}-${var.environment}-frontend"
+  force_destroy = true
 
   tags = {
     Name        = "${var.project_name}-${var.environment}-frontend"
@@ -235,6 +236,7 @@ resource "aws_s3_bucket_website_configuration" "frontend_website" {
 # S3 Bucket for Media Files
 resource "aws_s3_bucket" "media_bucket" {
   bucket = "${var.project_name}-${var.environment}-media"
+  force_destroy = true
 
   tags = {
     Name        = "${var.project_name}-${var.environment}-media"

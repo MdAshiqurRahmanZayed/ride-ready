@@ -16,7 +16,7 @@ npm install
 # Create .env with backend URL
 echo "⚙️  Configuring environment..."
 cat > .env << EOF
-REACT_APP_BACKEND_URL=http://3.64.19.143:9000
+REACT_APP_BACKEND_URL=http://3.64.19.143/
 EOF
 
 # Build production bundle
