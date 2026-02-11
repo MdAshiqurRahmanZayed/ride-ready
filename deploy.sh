@@ -1,10 +1,36 @@
 #!/bin/bash
 
-# RideReady Deployment Script
+#############################################
+# RideReady Backend Deployment Script
+#############################################
+# 
+# Use this script to manually deploy BACKEND ONLY to EC2 server
+# 
+# When to use:
+# - After making changes to backend/ directory
+# - After updating docker-compose.yml or Dockerfile
+# - After modifying Django models (migrations)
+# - When GitHub Actions is not available
+#
+# What it does:
+# 1. Pulls latest code from main branch
+# 2. Stops running containers
+# 3. Rebuilds Docker images with new code
+# 4. Starts containers (backend + database)
+# 5. Runs database migrations
+# 6. Collects static files to S3
+#
+# Note: Frontend is NOT deployed by this script.
+#       Use ./deploy-frontend.sh for frontend deployment.
+#
+# GitHub Actions Alternative:
+#   Push to main branch → backend/** changes trigger auto-deploy
+#
+#############################################
 
 set -e
 
-echo "🚀 Starting deployment..."
+echo "🚀 Starting BACKEND deployment..."
 
 # Navigate to backend directory
 cd backend/RideReady

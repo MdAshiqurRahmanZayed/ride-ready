@@ -1,11 +1,28 @@
 name: Deploy Frontend to S3
 
+# FRONTEND DEPLOYMENT PIPELINE
+# 
+# Triggers when:
+#   - Push to main branch with changes in frontend/ directory
+#   - Manual trigger via GitHub Actions UI
+#
+# What it does:
+#   1. Builds React application
+#   2. Uploads to S3 bucket
+#   3. Updates website content
+#
+# Result: 
+#   Frontend accessible at S3 website URL
+#
+# Note: Backend is NOT affected by this pipeline
+#       Backend has its own pipeline (deploy.yml)
+
 on:
   push:
     branches: [ main ]
     paths:
-      - 'frontend/**'
-  workflow_dispatch:
+      - 'frontend/**'      # Only trigger on frontend changes
+  workflow_dispatch:        # Allow manual trigger
 
 jobs:
   deploy:

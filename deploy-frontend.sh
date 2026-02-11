@@ -1,10 +1,41 @@
 #!/bin/bash
 
-# Build and deploy React frontend to S3
+#############################################
+# RideReady Frontend Deployment Script
+#############################################
+# 
+# Use this script to manually deploy FRONTEND ONLY to S3
+# 
+# When to use:
+# - After making changes to frontend/ directory
+# - After updating React components, styles, or configs
+# - When backend URL changes (updates .env)
+# - When GitHub Actions is not available
+#
+# What it does:
+# 1. Navigates to frontend/ directory
+# 2. Installs/updates npm dependencies
+# 3. Creates .env with backend URL
+# 4. Builds optimized production bundle
+# 5. Uploads build/ to S3 bucket
+# 6. Clears old files with --delete flag
+#
+# Note: Backend is NOT deployed by this script.
+#       Use ./deploy.sh for backend deployment.
+#
+# Requirements:
+# - AWS CLI configured with ostad-account profile
+# - Terraform outputs available (for bucket name)
+# - Node.js 18+ installed
+#
+# GitHub Actions Alternative:
+#   Push to main branch → frontend/** changes trigger auto-deploy
+#
+#############################################
 
 set -e
 
-echo "🚀 Building and deploying frontend..."
+echo "🚀 Building and deploying FRONTEND..."
 
 # Navigate to frontend directory
 cd "$(dirname "$0")/frontend"

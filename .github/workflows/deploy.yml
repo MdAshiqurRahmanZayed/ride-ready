@@ -1,12 +1,31 @@
 name: Deploy Backend to EC2
 
+# BACKEND DEPLOYMENT PIPELINE
+# 
+# Triggers when:
+#   - Push to main branch with changes in backend/ or terraform/
+#   - Manual trigger via GitHub Actions UI
+#
+# What it does:
+#   1. SSHs to EC2 server
+#   2. Pulls latest code
+#   3. Rebuilds Docker containers
+#   4. Runs database migrations
+#   5. Collects static files
+#
+# Result: 
+#   Backend API updated at http://backend-ip:9000
+#
+# Note: Frontend is NOT affected by this pipeline
+#       Frontend has its own pipeline (deploy-frontend.yml)
+
 on:
   push:
     branches: [ main ]
     paths:
-      - 'backend/**'
-      - 'terraform/**'
-  workflow_dispatch:
+      - 'backend/**'        # Trigger on backend changes
+      - 'terraform/**'      # Or infrastructure changes
+  workflow_dispatch:        # Allow manual trigger
 
 jobs:
   deploy:
