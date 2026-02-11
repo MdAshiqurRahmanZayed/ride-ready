@@ -1,5 +1,16 @@
 # Frontend Deployment Guide
 
+## Project Structure
+
+Frontend code is located in the `frontend/` directory:
+```
+frontend/
+  ├── src/           # React components
+  ├── public/        # Static assets
+  ├── package.json   # Dependencies
+  └── .env           # Environment variables
+```
+
 ## Prerequisites
 
 1. **AWS CLI configured** with your profile:
@@ -51,18 +62,17 @@ git push origin main
 
 ### Option 1: During Build
 ```bash
-# Edit .env
+# Edit frontend/.env
+cd frontend
 echo "REACT_APP_BACKEND_URL=http://your-ip:9000" > .env
 
 # Build
 npm run build
-
-# Deploy
-./deploy-frontend.sh
 ```
 
 ### Option 2: Environment Variable
 ```bash
+cd frontend
 REACT_APP_BACKEND_URL=http://your-ip:9000 npm run build
 ```
 
@@ -70,6 +80,7 @@ REACT_APP_BACKEND_URL=http://your-ip:9000 npm run build
 
 ```bash
 # Build
+cd frontend
 npm run build
 
 # Upload
@@ -111,6 +122,7 @@ S3 website config already set to redirect to index.html
 ### Build Fails
 ```bash
 # Clear cache
+cd frontend
 rm -rf node_modules package-lock.json
 npm install
 npm run build

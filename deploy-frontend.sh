@@ -6,8 +6,8 @@ set -e
 
 echo "🚀 Building and deploying frontend..."
 
-# Navigate to project root
-cd "$(dirname "$0")"
+# Navigate to frontend directory
+cd "$(dirname "$0")/frontend"
 
 # Install dependencies
 echo "📦 Installing dependencies..."
@@ -36,7 +36,7 @@ fi
 
 # Upload to S3
 echo "☁️  Uploading to S3: $BUCKET_NAME"
-aws s3 sync ../build s3://$BUCKET_NAME --delete --profile ostad-account --region eu-central-1
+aws s3 sync ./build s3://$BUCKET_NAME --delete --profile ostad-account --region eu-central-1
 
 echo "✅ Frontend deployed successfully!"
 echo "🌐 URL: http://$BUCKET_NAME.s3-website.eu-central-1.amazonaws.com"
