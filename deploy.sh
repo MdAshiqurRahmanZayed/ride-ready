@@ -11,14 +11,21 @@
 # - After updating docker-compose.yml or Dockerfile
 # - After modifying Django models (migrations)
 # - When GitHub Actions is not available
+# - Called automatically by GitHub Actions workflow
 #
 # What it does:
 # 1. Pulls latest code from main branch
 # 2. Stops running containers
 # 3. Rebuilds Docker images with new code
-# 4. Starts containers (backend + database)
+# 4. Starts containers (backend with Gunicorn + database)
 # 5. Runs database migrations
 # 6. Collects static files to S3
+#
+# Backend runs with Gunicorn (3 workers) for production performance
+#
+# Usage:
+#   On server:  cd ~/ride-ready && ./deploy.sh
+#   GitHub Actions: Calls this script automatically
 #
 # Note: Frontend is NOT deployed by this script.
 #       Use ./deploy-frontend.sh for frontend deployment.
@@ -32,8 +39,16 @@ set -e
 
 echo "🚀 Starting BACKEND deployment..."
 
-# Navigate to backend directory
-cd backend/RideReady
+# Navigate to backend directory (handle both root and backend/RideReady locations)
+if [ -d "backend/RideReady" ]; then
+    cd backend/RideReady
+elif [ -f "manage.py" ]; then
+    # Already in backend/RideReady
+    echo "📍 Already in backend directory"
+else
+    echo "❌ Error: Cannot find backend/RideReady directory"
+    exit 1
+fi
 
 # Pull latest changes
 echo "📥 Pulling latest code..."

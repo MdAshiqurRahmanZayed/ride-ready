@@ -82,7 +82,7 @@ git push
 | What | Command | Location | Time |
 |------|---------|----------|------|
 | **Frontend** | `./deploy-frontend.sh` | Root | ~2-3 min |
-| **Backend** | SSH + pull + docker compose | EC2 | ~3-5 min |
+| **Backend** | `./deploy.sh` | Root or Server | ~3-5 min |
 | **Both** | `./deploy-helper.sh` | Root | ~5 min |
 | **Interactive** | `./deploy-helper.sh` | Root | - |
 
@@ -144,6 +144,16 @@ sudo docker compose logs -f backend
 
 # Frontend (S3)
 aws s3 ls s3://your-bucket --profile ostad-account
+```
+
+### Manual Backend Deployment
+```bash
+# SSH to server
+ssh ubuntu@your-server
+
+# Run deployment script
+cd ~/ride-ready
+./deploy.sh
 ```
 
 ### Test Endpoints

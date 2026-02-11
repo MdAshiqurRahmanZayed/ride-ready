@@ -157,7 +157,11 @@ git push origin main
 
 # .github/workflows/deploy.yml  
 # Triggers on: backend/** or terraform/** changes
-# Actions: git pull → docker compose rebuild → migrations
+# Actions: SSH to server → Run deploy.sh script
+#   - git pull
+#   - docker compose rebuild
+#   - migrations
+#   - collectstatic
 ```
 
 ### Manual Deployment
@@ -176,22 +180,23 @@ What it does:
 
 #### Backend Only
 ```bash
-# SSH to server
+# SSH to server and run deploy script
 ssh ubuntu@your-server-ip
-
-# Navigate and deploy
-cd ~/ride-ready/backend/RideReady
-git pull origin main
-sudo docker compose down
-sudo docker compose up -d --build
-sudo docker compose exec backend python manage.py migrate
-sudo docker compose exec backend python manage.py collectstatic --noinput
+cd ~/ride-ready
+./deploy.sh
 ```
+
+The deploy.sh script automatically:
+1. Pulls latest code
+2. Stops containers
+3. Rebuilds with new code
+4. Runs migrations
+5. Collects static files
 
 #### Both (Full Deployment)
 ```bash
 # 1. Deploy backend first
-ssh ubuntu@your-server-ip "cd ~/ride-ready/backend/RideReady && git pull && sudo docker compose up -d --build && sudo docker compose exec backend python manage.py migrate"
+ssh ubuntu@your-server-ip "cd ~/ride-ready && ./deploy.sh"
 
 # 2. Then deploy frontend
 ./deploy-frontend.sh
