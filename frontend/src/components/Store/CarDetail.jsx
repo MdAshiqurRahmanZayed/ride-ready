@@ -5,7 +5,7 @@ import { baseUrl } from "../../redux/baseUrls";
 import Loading from "../Loading/Loading";
 import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
 import BookingForm from "../Book/BookingForm";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 
 const mapStateToProps = (state) => ({
   user_type: state.user_type,

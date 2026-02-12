@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { baseUrl } from "../../redux/baseUrls";
-import { useNavigate } from "react-router-dom";
 
 
 const mapStateToProps = (state) => ({
@@ -14,8 +13,6 @@ const mapStateToProps = (state) => ({
 
 const BookingForm = ({ toggle,token,userId,user_type,car  }) => {
   const [responseUrl, setResponseUrl] = useState("");
-
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     client: userId,
@@ -38,7 +35,7 @@ const BookingForm = ({ toggle,token,userId,user_type,car  }) => {
 
    try {
     //  let url = baseUrl + "api/booking/";
-     let url = baseUrl +"api"+"/"+ "booking/"+car.id+"/payment/";
+     let url = `${baseUrl}api/booking/${car.id}/payment/`;
      console.log(url);
      const config = {
        headers: {

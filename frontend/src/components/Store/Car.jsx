@@ -1,11 +1,7 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom"; 
-import { Button } from "reactstrap";
+import { Link } from "react-router-dom";
 
 const Car = ({ car }) => {
-  const userId = useSelector((state) => state.userId);
-  const user_type = useSelector((state) => state.user_type);
 
   let context = null;
   if (car) {
