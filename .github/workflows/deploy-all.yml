@@ -1,0 +1,84 @@
+name: Deploy (Manual)
+
+# MANUAL DEPLOYMENT WORKFLOW
+# 
+# This workflow allows you to manually deploy frontend, backend, or both
+# from the GitHub Actions UI
+#
+# Usage:
+#   1. Go to Actions tab in GitHub
+#   2. Select "Deploy (Manual)" workflow
+#   3. Click "Run workflow"
+#   4. Choose what to deploy (frontend, backend, or both)
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_target:
+        description: 'What to deploy?'
+        required: true
+        type: choice
+        options:
+          - both
+          - frontend
+          - backend
+        default: 'both'
+
+jobs:
+  deploy-frontend:
+    if: ${{ github.event.inputs.deploy_target == 'frontend' || github.event.inputs.deploy_target == 'both' }}
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: frontend
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Create .env file
+      run: |
+        echo "REACT_APP_BACKEND_URL=${{ secrets.BACKEND_URL }}" > .env
+
+    - name: Build
+      run: npm run build
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+
+    - name: Deploy to S3
+      run: |
+        aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+
+  deploy-backend:
+    if: ${{ github.event.inputs.deploy_target == 'backend' || github.event.inputs.deploy_target == 'both' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ~/ride-ready
+          ./deploy.sh

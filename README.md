@@ -1,128 +1,100 @@
 # RideReady
 
-A full-stack vehicle rental platform built with Django (backend) and React (frontend), deployed on AWS.
+Full-stack vehicle rental application with React frontend and Django REST Framework backend.
 
-## 🎯 Monorepo Structure
+## Tech Stack
 
-This is a **monorepo** containing both frontend and backend in one repository. Each part can be developed and deployed independently.
+**Frontend:** React 18, Redux Toolkit, React Router, Bootstrap 5  
+**Backend:** Django 5, DRF, Gunicorn, PostgreSQL 15  
+**Infrastructure:** AWS EC2, S3, Docker, Terraform  
+**CI/CD:** GitHub Actions
+
+## Quick Start
+
+### Local Development
+```bash
+# Frontend (http://localhost:3000)
+cd frontend && npm install && npm start
+
+# Backend (http://localhost:9000)
+cd backend/RideReady && docker compose up -d
+```
+
+### Deployment
+```bash
+# Automated (GitHub Actions)
+git push  # Auto-deploys based on changed files
+
+# Manual
+./deploy.sh                    # Backend (1-2 min downtime)
+./deploy-blue-green.sh deploy  # Backend (zero downtime)
+./deploy-frontend.sh           # Frontend to S3
+./deploy-helper.sh             # Interactive menu
+```
+
+## Project Structure
 
 ```
 ride-ready/
-├── frontend/              # React frontend → Deploys to S3
-│   ├── src/              # React components and logic
-│   ├── public/           # Static assets
-│   └── package.json      # Frontend dependencies
-├── backend/              # Django backend → Deploys to EC2
-│   └── RideReady/        # Django project
-│       ├── Account/      # User authentication
-│       ├── Vehicle/      # Vehicle management
-│       ├── Order/        # Booking/orders
-│       └── manage.py     # Django management
-├── terraform/            # AWS infrastructure as code
-└── .github/workflows/    # CI/CD pipelines
+├── frontend/              # React app
+├── backend/RideReady/     # Django API
+├── terraform/             # Infrastructure
+├── deploy*.sh             # Deployment scripts
+└── .github/workflows/     # CI/CD
 ```
 
-## 🚀 Quick Start
+## Environment Setup
 
-### Frontend Development
+**Frontend** (`frontend/.env`):
+```env
+REACT_APP_BACKEND_URL=http://backend-ip:9000
+```
+
+**Backend** (`backend/RideReady/.env`):
+```env
+SECRET_KEY=your-secret-key
+DEBUG=False
+ALLOWED_HOSTS=your-ip,domain
+DB_HOST=db
+DB_NAME=rideready_db
+DB_USER=rideready
+DB_PASSWORD=secure-password
+USE_S3=True
+AWS_STORAGE_BUCKET_NAME=your-bucket
+AWS_S3_REGION_NAME=eu-central-1
+CORS_ALLOWED_ORIGINS=http://frontend-url
+```
+
+## Monorepo Workflow
+
 ```bash
-cd frontend
-npm install
-npm start  # http://localhost:3000
-```
-See [frontend/README.md](frontend/README.md) for details.
+# Frontend only
+git add frontend/ && git commit -m "feat(frontend): description"
 
-### Backend Development
-```bash
-cd backend/RideReady
-docker compose up -d  # http://localhost:9000
-```
-See [backend/RideReady/README.md](backend/RideReady/README.md) for details.
+# Backend only
+git add backend/ && git commit -m "feat(backend): description"
 
-## 📦 Deployment
-
-### Option 1: Automated (GitHub Actions)
-Push to `main` branch:
-- Changes in `frontend/**` → Auto-deploy to S3
-- Changes in `backend/**` → Auto-deploy to EC2
-- Changes in both → Both deploy independently
-
-### Option 2: Manual Deployment
-
-**Interactive Helper:**
-```bash
-./deploy-helper.sh
+# Both
+git add frontend/ backend/ && git commit -m "feat: description"
 ```
 
-**Frontend Only:**
-```bash
-./deploy-frontend.sh  # Deploys React app to S3
-```
+Push to `main` triggers deployment:
+- `frontend/**` changes → S3
+- `backend/**` changes → EC2
 
-**Backend Only:**
-```bash
-./deploy.sh  # Deploys Django app to EC2
-```
+## Documentation
 
-## 📚 Documentation
+See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive deployment guide.
 
-### Core Guides
-- **🔄 [Monorepo Workflow](MONOREPO_WORKFLOW.md)** - How to work with frontend & backend together
-- **🏗️ [Project Structure](PROJECT_STRUCTURE.md)** - Complete architecture overview
-- **🚀 [Deployment Guide](README.deployment.md)** - Backend deployment details
-- **🎨 [Frontend Deployment](README.frontend-deployment.md)** - Frontend deployment details
+## Features
 
-### Component Guides
-- **Frontend**: [frontend/README.md](frontend/README.md)
-- **Backend**: [backend/RideReady/README.md](backend/RideReady/README.md)
-- **Infrastructure**: [terraform/README.md](terraform/README.md)
-- **Remote State**: [terraform/REMOTE_STATE.md](terraform/REMOTE_STATE.md)
+- Vehicle browsing and booking
+- User authentication (JWT)
+- Admin dashboard
+- Image uploads to S3
+- Responsive design
+- Zero-downtime deployment option
 
-## 💡 Common Workflows
+## License
 
-### Working on Frontend Only
-```bash
-cd frontend
-# Make changes...
-git add frontend/
-git commit -m "feat(frontend): add new feature"
-git push  # Only frontend deploys
-```
-
-### Working on Backend Only
-```bash
-cd backend/RideReady
-# Make changes...
-git add backend/
-git commit -m "feat(backend): add new API"
-git push  # Only backend deploys
-```
-
-### Working on Both
-```bash
-# Make changes in both directories...
-git add frontend/ backend/
-git commit -m "feat: implement new feature
-- frontend: add UI component
-- backend: add API endpoint"
-git push  # Both deploy
-```
-
-See [MONOREPO_WORKFLOW.md](MONOREPO_WORKFLOW.md) for detailed workflows.
-
-## 🛠️ Tech Stack
-
-**Frontend:** React 18, Redux Toolkit, React Router, Bootstrap 5  
-**Backend:** Django 5, DRF, PostgreSQL 15, Docker  
-**Infrastructure:** AWS (EC2, S3), Terraform, GitHub Actions  
-
-## 📸 Screenshots
-
-Demo:
-![](screenshot/a.png)
-![](screenshot/b.png)
-![](screenshot/c.png)
-![](screenshot/d.png)
-![](screenshot/e.png)
-![](screenshot/f.png)
-![](screenshot/g.png)
+MIT

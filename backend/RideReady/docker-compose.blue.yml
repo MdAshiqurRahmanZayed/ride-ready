@@ -1,0 +1,46 @@
+# Blue Environment - Production (Port 9000)
+# This is the current production environment
+
+services:
+  db:
+    image: postgres:15
+    container_name: rideready_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME:-rideready_db}
+      POSTGRES_USER: ${DB_USER:-rideready}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-rideready_password}
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - rideready-network
+
+  backend:
+    build: .
+    container_name: rideready_backend_blue
+    volumes:
+      - ./media:/app/media
+      - ./static:/app/static
+    ports:
+      - "9000:8000"
+    env_file:
+      - .env
+    environment:
+      - DEPLOYMENT_ENV=blue
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks:
+      - rideready-network
+    labels:
+      - "deployment=blue"
+      - "version=production"
+
+volumes:
+  postgres_data:
+
+networks:
+  rideready-network:
+    driver: bridge
