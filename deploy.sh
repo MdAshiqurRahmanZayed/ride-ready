@@ -73,19 +73,22 @@ is_running() {
 # Function to check health
 check_health() {
     local port=$1
-    local max_attempts=30
+    local max_attempts=20
     local attempt=0
     
     echo -e "${YELLOW}🔍 Checking health on port $port...${NC}"
     
     while [ $attempt -lt $max_attempts ]; do
         if curl -f -s "http://localhost:$port/api/health-check/" > /dev/null 2>&1; then
-            echo -e "${GREEN}✅ Health check passed on port $port${NC}"
-            return 0
+            # Double check - wait 2 seconds and try again
+            sleep 2
+            if curl -f -s "http://localhost:$port/api/health-check/" > /dev/null 2>&1; then
+                echo -e "${GREEN}✅ Health check passed on port $port${NC}"
+                return 0
+            fi
         fi
         attempt=$((attempt + 1))
-        echo "Attempt $attempt/$max_attempts..."
-        sleep 2
+        sleep 1
     done
     
     echo -e "${RED}❌ Health check failed after $max_attempts attempts${NC}"
@@ -154,7 +157,7 @@ sudo docker compose -f $DEPLOY_COMPOSE up -d --build
 
 # Wait for services to start
 echo -e "${YELLOW}⏳ Waiting for services to start...${NC}"
-sleep 15
+sleep 10
 
 # Run migrations on new environment
 echo -e "${YELLOW}📊 Running migrations...${NC}"
@@ -175,14 +178,19 @@ if check_health $DEPLOY_PORT; then
         if [ -f "$NGINX_CONF" ]; then
             # Update upstream to point to new environment
             sudo sed -i "s/server localhost:[0-9]\+;/server localhost:$DEPLOY_PORT;/" "$NGINX_CONF"
+            # Graceful reload (keeps existing connections)
             sudo nginx -t && sudo systemctl reload nginx
             echo -e "${GREEN}✅ Nginx updated to port $DEPLOY_PORT${NC}"
+            # Wait for connections to drain
+            sleep 5
         fi
     fi
     
     # Destroy old environment if exists
     if [ -n "$OLD_ENV" ]; then
         echo -e "${YELLOW}🗑️  Destroying old $OLD_ENV environment...${NC}"
+        # Give extra time for nginx to fully switch traffic
+        sleep 3
         sudo docker compose -f $OLD_COMPOSE down
         echo -e "${GREEN}✅ Old $OLD_ENV environment stopped${NC}"
     fi
