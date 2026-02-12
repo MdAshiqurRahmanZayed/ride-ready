@@ -43,6 +43,12 @@ variable "private_subnet_id_2" {
   default     = ""
 }
 
+variable "public_subnet_id_2" {
+  description = "Second public subnet ID for ALB (different AZ)"
+  type        = string
+  default     = ""
+}
+
 variable "nat_gateway_id" {
   description = "Existing NAT Gateway ID for private subnet"
   type        = string
@@ -165,3 +171,73 @@ variable "aws_secret_access_key" {
   sensitive   = true
   default     = ""
 }
+
+# RDS PostgreSQL Configuration
+variable "rds_engine_version" {
+  description = "PostgreSQL engine version"
+  type        = string
+  default     = "15.4"
+}
+
+variable "rds_allocated_storage" {
+  description = "Allocated storage for RDS (GB)"
+  type        = number
+  default     = 20
+}
+
+variable "rds_multi_az" {
+  description = "Enable Multi-AZ for RDS"
+  type        = bool
+  default     = false
+}
+
+variable "rds_backup_retention_days" {
+  description = "RDS backup retention period in days"
+  type        = number
+  default     = 7
+}
+
+# Auto Scaling Configuration
+variable "ami_id" {
+  description = "AMI ID for launch template (Ubuntu 22.04 LTS recommended)"
+  type        = string
+  default     = "ami-0084a47cc718c111a" # Ubuntu 22.04 LTS eu-central-1
+}
+
+variable "asg_min_size" {
+  description = "Minimum number of instances in ASG"
+  type        = number
+  default     = 2
+}
+
+variable "asg_max_size" {
+  description = "Maximum number of instances in ASG"
+  type        = number
+  default     = 3
+}
+
+variable "asg_desired_capacity" {
+  description = "Desired number of instances in ASG"
+  type        = number
+  default     = 2
+}
+
+variable "asg_cpu_target" {
+  description = "Target CPU utilization for scaling (percentage)"
+  type        = number
+  default     = 40
+}
+
+# GitHub Repository
+variable "github_repo_url" {
+  description = "GitHub repository URL"
+  type        = string
+  default     = "https://github.com/your-username/ride-ready.git"
+}
+
+variable "github_branch" {
+  description = "GitHub branch to deploy"
+  type        = string
+  default     = "main"
+}
+
