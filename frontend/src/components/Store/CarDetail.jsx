@@ -20,7 +20,6 @@ const CarDetail = ({ user_type, token }) => {
   const [loading, setLoading] = useState(true);
   const url = baseUrl + "api/car/" + id;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const userId = useSelector((state) => state.userId);
 
   // console.log(userId);
   useEffect(() => {
